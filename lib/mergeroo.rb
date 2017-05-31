@@ -93,10 +93,10 @@ else
 
 	end
 	
-	# Saving all on file
-	output_filename = File.basename( ARGV[ 0 ], ".java" ).concat( ".mergeroo.java" )
-	File.write( output_filename, result )
 
 	warn "Created merged file '#{output_filename}' (๑˃̵ᴗ˂̵)و" 
+	# Output everything to stdout, let the user redirect to file.
+	warn "Mergoo'd file (๑˃̵ᴗ˂̵)و"
+	puts result
 end
 
