@@ -20,16 +20,16 @@ def include_file( filename )
 		
 		return( content )
 	else
-		puts "Problem with an import file '#{filename}'"
+		warn "Problem with an import file '#{filename}'"
 		exit
 	end
 end
 
 # Reading the main file from input
 if ARGV[ 0 ].nil? then
-	puts "Need a file to start parsing."
+	warn "Need a file to start parsing."
 elsif !File.file?( ARGV[ 0 ] ) then
-	puts "Can't find the file '#{ARGV[ 0 ]}'"
+	warn "Can't find the file '#{ARGV[ 0 ]}'"
 else
 	# Looking for import in the file
 	result = ""
@@ -76,19 +76,19 @@ else
 		# Checking if all names are specified or if the whole package is
 		# required
 		if filename.include?( "*" ) then
-			puts "Full package required '#{filename}'"
+			warn "Full package required '#{filename}'"
 
 			Dir[ filename ].each do |package_file|
 				# Excluding the file received as input to the list of imports
 				if package_file != "#{pre_base}#{ARGV[ 0 ]}" then
 					result += include_file( package_file )
-					puts "\tAdded '#{File.basename( package_file )}'"
+					warn "\tAdded '#{File.basename( package_file )}'"
 				end
 			end
 		else
 			# It is a single file, I will include it
 			result += include_file( filename )
-			puts "\tAdded '#{File.basename( filename )}'"
+			warn "\tAdded '#{File.basename( filename )}'"
 		end
 
 	end
@@ -97,6 +97,6 @@ else
 	output_filename = File.basename( ARGV[ 0 ], ".java" ).concat( ".mergeroo.java" )
 	File.write( output_filename, result )
 
-	puts "Created merged file '#{output_filename}' (๑˃̵ᴗ˂̵)و"
+	warn "Created merged file '#{output_filename}' (๑˃̵ᴗ˂̵)و" 
 end
 
