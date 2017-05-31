@@ -5,3 +5,6 @@ peppino/
 **/*.swp
 *.mergeroo.java
 
+# Ruby
+bin/
+.bundle/
