@@ -5,6 +5,8 @@
 # Description: Java Mergeroo
 #
 
+LOCAL_DIR = "./"
+
 def include_file( filename )
 	# Checking if the file to be imported is correctly parsed or if it
 	# exists
@@ -44,16 +46,32 @@ else
 		end
 	end
 
+	# Adding the file in the same package as the file submitted
+	# Since the file is part of only one package, I take the first item from the
+	# array given as result of the scan
+	
+	# Creating the base_path of the file, adding a reference to the local
+	# folder if no reference is given
+	base_path = File.dirname( ARGV[ 0 ] )
+	pre_base = ( base_path.start_with?( "/", "./", "../" ) ? "" : LOCAL_DIR ) 
+	base_path = "#{pre_base}#{base_path}"
+
+	# Creating an array containing the imports to do
+	to_import = Array.new
+	# Self package
+	to_import.push( File.read( ARGV[ 0 ] ).scan( /package (.*);/ ).flatten.first.concat( ".*" ) )
+	# Imports
+	to_import.push( File.read( ARGV[ 0 ] ).scan( /import ((?!java).*);/ ) )
+	# Transforming info in file paths
+	to_import = to_import.flatten.map{ |x| x.gsub( ".", "/" ).concat( ".java" ) }
+
+	# Taking the real base path knowing from where I am starting using the
+	# package information
+	base_path = base_path[ 0..base_path.index( File.dirname( to_import[ 0 ] ) )-1 ]
+
 	# Reading all local import files, excluding the java ones
-	File.read( ARGV[ 0 ] ).scan( /import ((?!java).*);/ ).flatten.each do |file|
-		# Getting the file name and adding the dirname to it
-		filename = file.gsub( ".", "/" ).concat( ".java" )
-		# Creating the base_path of the file, adding a reference to the local
-		# folder if no reference is given
-		base_path = File.dirname( ARGV[ 0 ] )
-		base_path = "./#{base_path}" unless base_path.start_with?( "/", "./", "../" )
-		base_path = base_path[ 0..base_path.index( File.dirname( filename ) )-1 ]
-		filename = base_path.concat( filename )
+	to_import.each do |file|
+		filename = "#{base_path}#{file}"
 
 		# Checking if all names are specified or if the whole package is
 		# required
@@ -61,15 +79,21 @@ else
 			puts "Full package required '#{filename}'"
 
 			Dir[ filename ].each do |package_file|
-				result += include_file( package_file )
+				# Excluding the file received as input to the list of imports
+				if package_file != "#{pre_base}#{ARGV[ 0 ]}" then
+					result += include_file( package_file )
+					puts "\tAdded '#{File.basename( package_file )}'"
+				end
 			end
 		else
 			# It is a single file, I will include it
 			result += include_file( filename )
+			puts "\tAdded '#{File.basename( filename )}'"
 		end
 
 	end
 	
+	# Saving all on file
 	output_filename = File.basename( ARGV[ 0 ], ".java" ).concat( ".mergeroo.java" )
 	File.write( output_filename, result )
 
