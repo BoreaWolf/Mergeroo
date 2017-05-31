@@ -93,8 +93,6 @@ else
 
 	end
 	
-
-	warn "Created merged file '#{output_filename}' (๑˃̵ᴗ˂̵)و" 
 	# Output everything to stdout, let the user redirect to file.
 	warn "Mergoo'd file (๑˃̵ᴗ˂̵)و"
 	puts result
