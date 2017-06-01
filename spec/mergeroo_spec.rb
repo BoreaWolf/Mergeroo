@@ -16,7 +16,7 @@ RSpec.describe Mergeroo, "#merge" do
 		it "removes the package line" do
 			File.write( test_file, "package testaroo;\n\nclass Testaroo {\n}" )
 
-			result = Mergeroo.new.merge( test_file )
+			result = Mergeroo.new(:error).merge( test_file )
 			expect( result ).to eq "\n\nclass Testaroo {\n}"
 
 			File.delete test_file
@@ -25,7 +25,7 @@ RSpec.describe Mergeroo, "#merge" do
 		it "keeps the external includes" do
 			File.write( test_file, "package testaroo;\nimport java.io.*;\n\nclass Testaroo {\n}" )
 
-			result = Mergeroo.new.merge( test_file )
+			result = Mergeroo.new(:error).merge( test_file )
 			expect( result ).to eq "\nimport java.io.*;\n\nclass Testaroo {\n}"
 
 			File.delete test_file

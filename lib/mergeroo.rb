@@ -6,9 +6,14 @@
 #
 
 require 'fileutils'
+require 'logger'
 
 class Mergeroo
 	LOCAL_DIR = "./"
+
+	def initialize( debug_level )
+		@log = Logger.new( STDERR, level: debug_level )
+	end
 
 	def cleanup_file( filename )
 		result = "" 
@@ -37,7 +42,7 @@ class Mergeroo
 
 			return content
 		else
-			warn "Problem with an import file '#{filename}'"
+			@log.fatal "Problem with an import file '#{filename}'"
 			exit
 		end
 	end
@@ -45,9 +50,9 @@ class Mergeroo
 	def merge( filename )
 		# Reading the main file from input
 		if filename.nil? then
-			warn "Need a file to start parsing."
+			@log.error "Need a file to start parsing."
 		elsif !File.file?( filename ) then
-			warn "Can't find the file '#{filename}'"
+			@log.error "Can't find the file '#{filename}'"
 		else
 			# Looking for import in the file
 			result = cleanup_file( filename )
@@ -82,28 +87,28 @@ class Mergeroo
 				# Checking if all names are specified or if the whole package is
 				# required
 				if import_filename.include?( "*" ) then
-					warn "Full package required '#{import_filename}'"
+					@log.debug "Full package required '#{import_filename}'"
 
 					Dir[ import_filename ].each do |package_file|
 						# Excluding the file received as input to the list of imports
 						if package_file != "#{pre_base}#{filename}" then
 							result += include_file( package_file )
-							warn "\tAdded '#{File.basename( package_file )}'"
+							@log.debug "\tAdded '#{File.basename( package_file )}'"
 						end
 					end
 				else
 					# It is a single file, I will include it
 					result += include_file( import_filename )
-					warn "\tAdded '#{File.basename( import_filename )}'"
+					@log.debug "\tAdded '#{File.basename( import_filename )}'"
 				end
 
 			end
 
 			# Output everything to stdout, let the user redirect to file.
-			warn "Mergoo'd file (๑˃̵ᴗ˂̵)و"
+			@log.info "Mergoo'd file (๑˃̵ᴗ˂̵)و"
 			return result
 		end
 	end
 end
 
-puts Mergeroo.new.merge( ARGV[ 0 ] )
+puts Mergeroo.new(:info).merge( ARGV[ 0 ] )
