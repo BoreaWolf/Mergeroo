@@ -84,7 +84,7 @@ class Mergeroo
 						# Excluding the file received as input to the list of imports
 						if package_file != "#{pre_base}#{import_filename}" then
 							result += include_file( package_file )
-					warn "\tAdded '#{File.basename( package_file )}'"
+							warn "\tAdded '#{File.basename( package_file )}'"
 						end
 					end
 				else
