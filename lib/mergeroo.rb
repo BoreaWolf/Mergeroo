@@ -21,6 +21,7 @@ class Mergeroo
 				result += line 
 			end 
 		end 
+		result.gsub!( /^package .*/, "" )
 		return result 
 	end
 
@@ -30,10 +31,7 @@ class Mergeroo
 		if File.file?( filename ) then
 			content = cleanup_file( filename )
 
-			# I can't do this on a single line because if nothing is found it
-			# returns nil and then tries to work on it
 			content.gsub!( /public (abstract )?(class|enum|interface)/, '\1\2' )
-			content.gsub!( /package .*/, "" )
 
 			return content
 		else
