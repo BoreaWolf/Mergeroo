@@ -97,9 +97,9 @@ class Mergeroo
 
 			# Output everything to stdout, let the user redirect to file.
 			warn "Mergoo'd file (๑˃̵ᴗ˂̵)و"
-			puts result
+			return result
 		end
 	end
 end
 
-Mergeroo.new.merge( ARGV[ 0 ] )
+puts Mergeroo.new.merge( ARGV[ 0 ] )
