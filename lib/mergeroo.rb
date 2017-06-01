@@ -5,6 +5,8 @@
 # Description: Java Mergeroo
 #
 
+require 'fileutils'
+
 class Mergeroo
 	LOCAL_DIR = "./"
 
