@@ -26,7 +26,7 @@ RSpec.describe Mergeroo, "#merge" do
 			File.write( test_file, "package testaroo;\nimport java.io.*;\n\nclass Testaroo {\n}" )
 
 			result = Mergeroo.new.merge( test_file )
-			expect( result ).to eq "import java.io.*\n\nclass Testaroo {\n}"
+			expect( result ).to eq "\nimport java.io.*;\n\nclass Testaroo {\n}"
 
 			File.delete test_file
 		end
