@@ -82,7 +82,7 @@ class Mergeroo
 
 					Dir[ import_filename ].each do |package_file|
 						# Excluding the file received as input to the list of imports
-						if package_file != "#{pre_base}#{import_filename}" then
+						if package_file != "#{pre_base}#{filename}" then
 							result += include_file( package_file )
 							warn "\tAdded '#{File.basename( package_file )}'"
 						end
