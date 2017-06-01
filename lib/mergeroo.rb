@@ -8,18 +8,34 @@
 class Mergeroo
 	LOCAL_DIR = "./"
 
+	def cleanup_file( filename )
+		result = "" 
+		# Removing the import lines from the result 
+		File.foreach( filename ) do |line| 
+			# Excluding only the local imports 
+			if line.include?( "import" ) then 
+				if line.include?( " java." ) then 
+					result += line 
+				end 
+			else 
+				result += line 
+			end 
+		end 
+		return result 
+	end
+
 	def include_file( filename )
 		# Checking if the file to be imported is correctly parsed or if it
 		# exists
 		if File.file?( filename ) then
-			content = File.read( filename )
+			content = cleanup_file( filename )
 
 			# I can't do this on a single line because if nothing is found it
 			# returns nil and then tries to work on it
 			content.gsub!( /public (abstract )?(class|enum|interface)/, '\1\2' )
 			content.gsub!( /package .*/, "" )
 
-			return( content )
+			return content
 		else
 			warn "Problem with an import file '#{filename}'"
 			exit
@@ -34,19 +50,7 @@ class Mergeroo
 			warn "Can't find the file '#{filename}'"
 		else
 			# Looking for import in the file
-			result = ""
-
-			# Removing the import lines from the result
-			File.foreach( filename ) do |line|
-				# Excluding only the local imports
-				if line.include?( "import" ) then
-					if line.include?( " java." ) then
-						result += line
-					end
-				else
-					result += line
-				end
-			end
+			result = cleanup_file( filename )
 
 			# Adding the file in the same package as the file submitted
 			# Since the file is part of only one package, I take the first item from the
