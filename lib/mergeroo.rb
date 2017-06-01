@@ -111,4 +111,6 @@ class Mergeroo
 	end
 end
 
-puts Mergeroo.new(:info).merge( ARGV[ 0 ] )
+if __FILE__ == $PROGRAM_NAME then
+	puts Mergeroo.new(:info).merge( ARGV[ 0 ] )
+end
