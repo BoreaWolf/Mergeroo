@@ -69,7 +69,7 @@ class Mergeroo
 
 			# Taking the real base path knowing from where I am starting using the
 			# package information
-			base_path = base_path[ 0..base_path.index( File.dirname( to_import[ 0 ] ) )-1 ]
+			base_path = base_path[ 0...base_path.index( File.dirname( to_import[ 0 ] ) ) ]
 
 			# Reading all local import files, excluding the java ones
 			to_import.each do |file|
